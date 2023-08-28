@@ -1,2 +1,6 @@
 *.pdf
 *.gif
+/Plots
+/Frames
+*/.ipynb_checkpoints
+*/__pycache__

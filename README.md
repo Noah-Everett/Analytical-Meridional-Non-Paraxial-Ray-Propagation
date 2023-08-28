@@ -1,6 +1,8 @@
+![Example Lens](Figures/exampleLens.gif)
+
 # Analytical Meridional Non-Paraxial Ray Propagation
 
-This repository contains a Python implementation for the analytical meridional non-paraxial ray propagation in optical systems. The code allows for the simulation and analysis of the behavior of optical rays as they pass through various lenses and surfaces.
+This repositoriy contains a Python implementation for the analytical meridional non-paraxial ray propagation in optical systems. The code allows for the simulation and analysis of the behavior of optical rays as they pass through various lenses and surfaces.
 
 (README syntax: `[]` denotes an optional argument, `<>` denotes a required argument)
 
