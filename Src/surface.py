@@ -10,10 +10,12 @@ class surface:
         Parameters:
             surface (surface): Another surface object to copy the attributes from.
         """
-        self.r_x        = surface.r_x
-        self.r_y        = surface.r_y
-        self.x          = surface.x
-        self.verbose    = surface.verbose
+        self.r_x     = surface.r_x
+        self.r_y     = surface.r_y
+        self.x       = surface.x
+        self.y_min   = surface.y_min
+        self.y_max   = surface.y_max
+        self.verbose = surface.verbose
         
     def __init__(self, r_x, r_y, x, y_min=None, y_max=None, verbose=False):
         """
@@ -65,7 +67,7 @@ class surface:
         if reverse:
             limits = [self.y_max-safety, self.y_min+safety]
             
-        for y in np.linspace(limits[0], limits[1], nPoints):
+        for y in np.linspace(limits[0], limits[1], int(nPoints)):
             c_1 = 1/self.r_x**2
             c_2 = -2*self.x/self.r_x**2
             c_3 = self.x**2/self.r_x**2 + y**2/self.r_y**2 - 1

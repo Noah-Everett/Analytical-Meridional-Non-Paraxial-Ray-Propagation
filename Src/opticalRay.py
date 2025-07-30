@@ -57,3 +57,5 @@ class opticalRay:
             raise ValueError('Theta out of bounds')
 
         return True
+
+# def plotOpticalRay():

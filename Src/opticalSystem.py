@@ -1,3 +1,6 @@
+from .surface import surface
+from .lens import lens
+
 class opticalSystem:
     def __init__(self, lenses, finalSurface, refractiveIndex, verbose=False):
         """
@@ -14,6 +17,7 @@ class opticalSystem:
         self.verbose      = verbose
         self.__sort_lenses()
         self.__check_lensOverlap()
+        self.__check_lensOverlap_finalSurface()
         self.__check_finalSurface()
         self.surfaces = []
         
@@ -38,6 +42,7 @@ class opticalSystem:
         self.lenses.append(lens)
         self.__sortLenses()
         self.__check_lensOverlap()
+        self.__check_lensOverlap_finalSurface()
         self.__check_finalSurface()
         self.__check_surfaces_length()
         self.__update_surfaces_order(lens)
@@ -65,7 +70,32 @@ class opticalSystem:
             surface_2 = lens_2.surface_1
             if surface_1.x + surface_1.r_x > surface_2.x + surface_2.r_x:
                 raise ValueError("Lens overlap detected")
+            surface_1_points = surface_1.get_points(2)
+            surface_2_points = surface_2.get_points(2)
+            if surface_1_points[0][0] > surface_2_points[0][0]:
+                raise ValueError("Lens overlap detected")
                 
+        return True
+    
+    def __check_lensOverlap_finalSurface(self):
+        """
+        Check if there is any overlap between the final surface and the last lens.
+        
+        Returns:
+            bool: True if there is no overlap, False otherwise.
+        
+        Raises:
+            ValueError: If lens overlap is detected.
+        """
+        lastLensSurface = self.lenses[-1].surface_2.r_x + self.lenses[-1].surface_2.x
+        if lastLensSurface > self.finalSurface.r_x + self.finalSurface.x:
+            raise ValueError("Lens overlap detected")
+        
+        surface_1_points = self.lenses[-1].surface_2.get_points(2)
+        surface_2_points = self.finalSurface.get_points(2)
+        if surface_1_points[0][0] > surface_2_points[0][0]:
+            raise ValueError("Lens overlap detected")
+            
         return True
     
     def __check_finalSurface(self):
@@ -141,3 +171,35 @@ class opticalSystem:
         points.append(self.surfaces[-1].get_points(nPoints))
             
         return points
+    
+def constructOpticalSystem(lens_parameters, verbose=False):
+    """
+    Construct the optical system from the specified parameters.
+    """
+    surfaces = []
+    lenses   = []
+    for nLens in range(len(lens_parameters)):
+        if nLens != len(lens_parameters)-1:
+            surfaces.append(surface(lens_parameters[nLens][0][0],lens_parameters[nLens][0][1],
+                                    lens_parameters[nLens][4] - lens_parameters[nLens][0][0] - lens_parameters[nLens][1]/2,
+                                    lens_parameters[nLens][0][2],lens_parameters[nLens][0][3],verbose=verbose))
+            surfaces.append(surface(lens_parameters[nLens][3][0],lens_parameters[nLens][3][1],
+                                    lens_parameters[nLens][4] - lens_parameters[nLens][3][0] + lens_parameters[nLens][1]/2,
+                                    lens_parameters[nLens][3][2],lens_parameters[nLens][3][3],verbose=verbose))
+            lenses.append(lens(surfaces[-2],surfaces[-1],lens_parameters[nLens][2],verbose)) 
+        else:
+            surfaces.append(surface(lens_parameters[nLens][0][0],lens_parameters[nLens][0][1],lens_parameters[nLens][0][2],
+                                    lens_parameters[nLens][0][3],lens_parameters[nLens][0][4],verbose=verbose))
+    OS = opticalSystem(lenses,surfaces[-1],lens_parameters[-1][1],verbose)
+    return surfaces, lenses, OS
+
+def plotOpticalSystem(ax, color, OS, nPoints, plotLenses=True):
+    if plotLenses: surfaces_points = OS.get_points_lenses  (nPoints)
+    else         : surfaces_points = OS.get_points_surfaces(nPoints)
+
+    surfaces_plot = []
+    if plotLenses:
+        for nLens in range(len(OS.lenses)+1):
+            surfaces_plot.append(ax.plot([x for x,y in surfaces_points[nLens]], [y for x,y in surfaces_points[nLens]], color=color, linewidth=2.5)[0])
+        
+    return surfaces_plot

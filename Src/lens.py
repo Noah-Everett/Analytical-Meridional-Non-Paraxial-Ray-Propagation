@@ -12,6 +12,7 @@ class lens:
         self.surface_2       = lens.surface_2
         self.refractiveIndex = lens.refractiveIndex
         self.verbose         = lens.verbose
+        self.__check_surface()
         self.__sortSurfaces()
         
     def __init__(self, surface_1, surface_2, refractiveIndex, verbose=False):
@@ -28,6 +29,7 @@ class lens:
         self.surface_2       = surface_2
         self.refractiveIndex = refractiveIndex
         self.verbose         = verbose
+        self.__check_surface()
         self.__sortSurfaces()
                 
     def __sortSurfaces(self):
@@ -63,3 +65,20 @@ class lens:
         points.append(self.surface_1.get_point_fromY(self.surface_1.y_min))
         
         return points
+    
+    def __check_surface(self):
+        """
+        Check if the surfaces of the lens are valid.
+        
+        Returns:
+            bool: True if the surfaces are valid, False otherwise.
+        """
+        if self.surface_1.x + self.surface_1.r_x > self.surface_2.x + self.surface_2.r_x:
+            raise ValueError("Surface 1 is to the right of Surface 2")
+        
+        surface_1_points = self.surface_1.get_points(2)
+        surface_2_points = self.surface_2.get_points(2)
+        if surface_1_points[0][0] > surface_2_points[0][0]:
+            raise ValueError("Surface 1 is to the right of Surface 2")
+        
+        return True
