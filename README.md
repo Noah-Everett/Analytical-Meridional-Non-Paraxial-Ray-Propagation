@@ -4,6 +4,8 @@
 
 This repositoriy contains a Python implementation for the analytical meridional non-paraxial ray propagation in optical systems. The code allows for the simulation and analysis of the behavior of optical rays as they pass through various lenses and surfaces.
 
+For more information on the math and theory behind the implementation, please refer to the [paper](https://inspirehep.net/files/2b5cca16499156c122d1ac1970bfcded) or equivalently [`paper.pdf`](https://github.com/Noah-Everett/Analytical-Meridional-Non-Paraxial-Ray-Propagation/blob/main/paper.pdf).
+
 (README syntax: `[]` denotes an optional argument, `<>` denotes a required argument)
 
 ## Installation

@@ -1,7 +1,3 @@
-*.pdf
-*.gif
-/Plots
-/Frames
 */.ipynb_checkpoints
 */__pycache__
 **.DS_Store
